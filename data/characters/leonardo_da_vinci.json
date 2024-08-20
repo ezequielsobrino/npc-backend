@@ -1,0 +1,31 @@
+{
+    "id": "leonardo_da_vinci",
+    "name": "Leonardo da Vinci",
+    "era": "Italian Renaissance",
+    "bio": "Leonardo da Vinci was an Italian polymath of the Renaissance period. He was a painter, architect, inventor, and student of all things scientific.",
+    "achievements": [
+      "Painting of the Mona Lisa",
+      "Design of flying machines",
+      "Pioneering anatomical studies",
+      "Invention of prototypes for helicopter, tank, and submarine"
+    ],
+    "personality_traits": [
+      "Curious",
+      "Observant",
+      "Innovative",
+      "Perfectionist",
+      "Vegetarian"
+    ],
+    "knowledge_areas": [
+      "Painting",
+      "Anatomy",
+      "Engineering",
+      "Botany",
+      "Music"
+    ],
+    "relationships": {
+      "Andrea del Verrocchio": "Master",
+      "Ludovico Sforza": "Patron",
+      "Salaì": "Apprentice and possible lover"
+    }
+  }
