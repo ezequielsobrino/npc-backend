@@ -10,6 +10,7 @@ This project is a backend server for managing Non-Player Characters (NPCs) in a 
 - Session management for persistent conversations
 - Support for multiple languages (with plans for translation)
 - Integration with Groq API for natural language processing
+- Accuracy testing for NPC responses
 
 ## Technologies Used
 
@@ -69,11 +70,31 @@ Once the server is running, you can access the automatic API documentation at:
 
 ## Testing
 
-To test the backend, you can use the provided HTML test page:
+### Manual Testing
+To test the backend manually, you can use the provided HTML test page:
 
 1. Open the file `\static\test.html` in a web browser.
 2. Select a character from the dropdown menu.
 3. Start chatting with the NPC using the input field and send button.
+
+### Accuracy Testing
+To test the accuracy of NPC responses, you can use the provided accuracy testing script:
+
+1. Ensure you have a JSON file with test questions and correct answers in the `tests/data/` directory. For example, `jose_de_san_martin_questions.json`.
+
+2. Run the accuracy test script:
+   ```
+   python -m tests.accuracy.test_jose_de_san_martin_accuracy
+   ```
+
+3. The script will:
+   - Generate responses for each question using the NPC's logic
+   - Evaluate the responses using Groq as an expert evaluator
+   - Calculate precision and relevance scores for each response
+   - Save the results in a CSV file in the `tests/results/` directory
+   - Print average precision and relevance scores
+
+This test helps ensure that the NPC's responses are historically accurate and relevant to the questions asked.
 
 ## Project Structure
 
@@ -100,6 +121,13 @@ npc-backend/
 │       └── *.json
 ├── static/
 │   └── test.html
+├── tests/
+│   ├── accuracy/
+│   │   └── test_jose_de_san_martin_accuracy.py
+│   ├── data/
+│   │   └── jose_de_san_martin_questions.json
+│   └── results/
+│       └── accuracy_results_jose_de_san_martin.csv
 ├── .env
 ├── requirements.txt
 └── README.md
@@ -130,6 +158,7 @@ The `SessionManager` class in `app/core/session.py` handles user sessions, maint
 - Implement translation functionality using the Groq API
 - Expand the character database
 - Improve response generation with more advanced prompting techniques
+- Enhance accuracy testing with more comprehensive test sets
 
 ## Contributing
 
