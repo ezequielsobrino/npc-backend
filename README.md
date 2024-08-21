@@ -23,7 +23,7 @@ This project is a backend server for managing Non-Player Characters (NPCs) in a 
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/npc-backend.git
+   git clone https://github.com/ezequielsobrino/npc-backend.git
    cd npc-backend
    ```
 
