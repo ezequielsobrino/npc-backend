@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPC Backend Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { color: #333; }
+        #chat-container { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; margin-bottom: 10px; }
+        #message-input { width: 70%; padding: 5px; }
+        #send-button { padding: 5px 10px; }
+        #character-select { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>NPC Backend Test</h1>
+    
+    <select id="character-select">
+        <option value="">Select a character</option>
+    </select>
+    
+    <div id="chat-container"></div>
+    
+    <input type="text" id="message-input" placeholder="Type your message...">
+    <button id="send-button">Send</button>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        let socket;
+        let sessionId;
+        let currentCharacterId;
+        let isReconnecting = false;
+
+        // Fetch characters
+        async function fetchCharacters() {
+            try {
+                const response = await axios.get(`${API_URL}/api/characters`);
+                const characters = response.data;
+                const select = document.getElementById('character-select');
+                characters.forEach(char => {
+                    const option = document.createElement('option');
+                    option.value = char.id;
+                    option.textContent = char.name;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching characters:', error);
+            }
+        }
+
+        // Initialize WebSocket connection
+        function initWebSocket(characterId) {
+            if (socket && socket.readyState !== WebSocket.CLOSED) {
+                socket.close();
+            }
+            
+            currentCharacterId = characterId;
+            socket = new WebSocket(`ws://localhost:8000/ws/chat`);
+
+            socket.onopen = function(e) {
+                console.log("WebSocket connection established");
+                isReconnecting = false;
+                socket.send(JSON.stringify({type: "init", characterId: characterId, language: "en"}));
+            };
+
+            socket.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                if (data.type === "init") {
+                    sessionId = data.sessionId;
+                } else if (data.type === "chat") {
+                    displayMessage('NPC', data.message);
+                }
+            };
+
+            socket.onclose = function(event) {
+                console.log("WebSocket connection closed");
+                if (!isReconnecting) {
+                    isReconnecting = true;
+                    setTimeout(function() {
+                        initWebSocket(currentCharacterId);
+                    }, 3000);
+                }
+            };
+
+            socket.onerror = function(error) {
+                console.error(`WebSocket Error: ${error}`);
+            };
+        }
+
+        // Display message in chat container
+        function displayMessage(sender, message) {
+            const chatContainer = document.getElementById('chat-container');
+            const messageElement = document.createElement('p');
+            messageElement.innerHTML = `<strong>${sender}:</strong> ${message}`;
+            chatContainer.appendChild(messageElement);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Send message
+        async function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value.trim();
+            if (message && socket && socket.readyState === WebSocket.OPEN) {
+                displayMessage('You', message);
+                socket.send(JSON.stringify({type: "chat", message: message}));
+                messageInput.value = '';
+            }
+        }
+
+        // Clear chat history
+        function clearChatHistory() {
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.innerHTML = '';
+        }
+
+        // Event listeners
+        document.getElementById('character-select').addEventListener('change', function(e) {
+            if (e.target.value) {
+                clearChatHistory();
+                initWebSocket(e.target.value);
+            }
+        });
+
+        document.getElementById('send-button').addEventListener('click', sendMessage);
+        document.getElementById('message-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Initialize
+        fetchCharacters();
+    </script>
+</body>
+</html>

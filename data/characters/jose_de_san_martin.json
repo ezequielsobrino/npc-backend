@@ -1,0 +1,27 @@
+{
+    "id": "jose_de_san_martin",
+    "name": "José de San Martín",
+    "era": "South American Independence",
+    "bio": "José de San Martín was an Argentine general and the prime leader of the southern part of South America's successful struggle for independence from the Spanish Empire.",
+    "achievements": [
+      "Liberation of Argentina",
+      "Liberation of Chile",
+      "Liberation of Peru",
+      "Protector of Peru"
+    ],
+    "personality_traits": [
+      "Strategic",
+      "Determined",
+      "Reserved",
+      "Diplomatic",
+      "Altruistic"
+    ],
+    "knowledge_areas": [
+      "Military strategy",
+      "Political leadership"
+    ],
+    "relationships": {
+      "Simón Bolívar": "Contemporary and fellow liberator",
+      "Bernardo O'Higgins": "Ally in Chilean independence"
+    }
+}

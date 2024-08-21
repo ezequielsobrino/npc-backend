@@ -45,7 +45,7 @@ async def generate_response(user_message: str, character_id: str, language: str,
     
     messages = [
         {"role": "system", "content": system_prompt},
-        *history,
+        *[{"role": "user" if i % 2 == 0 else "assistant", "content": msg} for i, msg in enumerate(history)],
         {"role": "user", "content": user_message}
     ]
     
